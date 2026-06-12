@@ -1,0 +1,29 @@
+# macOS metadata
+.DS_Store
+
+# Local CPA runtime config and credentials
+config.yaml
+auths/
+logs/
+manager-data/
+
+# Backups and exported credential archives
+*.tar.gz
+*.tgz
+*backup*/
+*auth*backup*
+cpa-backup-*
+cpa-auths-backup-*
+cpa-old-homebrew-cli-proxy-api-*
+
+# Common local secret files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.sqlite
+*.sqlite-*

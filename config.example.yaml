@@ -1,0 +1,73 @@
+# Copy this file to config.yaml and replace local placeholders before running.
+# Do not commit config.yaml, auths/, logs/, or manager-data/.
+
+host: ""
+port: 8317
+
+tls:
+  enable: false
+  cert: ""
+  key: ""
+
+remote-management:
+  allow-remote: true
+  # Set a new plaintext value locally; CPA will hash it on startup.
+  secret-key: "<CPA_MANAGEMENT_KEY>"
+  disable-control-panel: false
+  panel-github-repository: "https://github.com/router-for-me/Cli-Proxy-API-Management-Center"
+
+auth-dir: "/root/.cli-proxy-api"
+
+# Replace these with your own local client API keys or leave empty.
+api-keys: []
+
+debug: false
+
+pprof:
+  enable: false
+  addr: "127.0.0.1:8316"
+
+plugins:
+  enabled: false
+  dir: "plugins"
+  configs: {}
+
+commercial-mode: false
+logging-to-file: true
+logs-max-total-size-mb: 0
+error-logs-max-files: 10
+usage-statistics-enabled: true
+redis-usage-queue-retention-seconds: 60
+
+# Use host.docker.internal when CPA runs in Docker and the proxy is on the Mac host.
+proxy-url: "http://host.docker.internal:7890"
+
+force-model-prefix: false
+passthrough-headers: false
+request-retry: 5
+max-retry-credentials: 0
+max-retry-interval: 30
+disable-cooling: false
+disable-image-generation: false
+
+quota-exceeded:
+  switch-project: true
+  switch-preview-model: true
+  antigravity-credits: true
+
+routing:
+  strategy: "fill-first"
+  session-affinity: false
+  session-affinity-ttl: "1h"
+
+codex:
+  identity-confuse: false
+
+ws-auth: true
+enable-gemini-cli-endpoint: false
+nonstream-keepalive-interval: 0
+
+# Optional upstream API-key providers. Keep real keys only in config.yaml.
+# codex-api-key:
+#   - api-key: "<CODEX_API_KEY>"
+#     base-url: "https://example.com"
