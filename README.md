@@ -69,20 +69,90 @@ docker compose ps
 Inside Docker, Manager Plus should connect to CPA through:
 
 ```text
-http://cli-proxy-api:8317
+http://cpa-cli-proxy:8317
 ```
 
 Use the same CPA management key you configured in `config.yaml`.
 
-## Manager Plus Admin Key
+## 密钥配置说明
 
-Set or reset the Manager Plus admin key with:
+### 1. CPA 管理密钥（CLI Proxy API）
+
+**配置文件**：`config.yaml`
+
+**配置字段**：`remote-management.secret-key`
+
+```yaml
+remote-management:
+  allow-remote: true
+  secret-key: "your-cpa-management-key"
+```
+
+**说明**：
+- 此密钥用于 CPA Manager Plus 连接 CLI Proxy API 时的认证
+- 首次启动后，CPA 会自动将明文密钥转换为 bcrypt 哈希存储
+- 转换后无法从哈希反推出原始密钥，需记住或另存原始值
+
+**查看当前密钥**：
+```bash
+grep 'secret-key' config.yaml
+```
+
+### 2. CPA Manager Plus 管理员密钥
+
+**存储位置**：`manager-data/data.key`（自动生成，为加密密钥，非登录密钥）
+
+**管理员密钥格式**：`cmp_admin_` 开头的字符串
+
+#### 首次部署
+
+首次启动时，管理员密钥会自动生成。查看方式：
 
 ```bash
-docker compose stop cpa-manager-plus
-docker compose run --rm cpa-manager-plus reset-admin-key --admin-key "<MANAGER_PLUS_ADMIN_KEY>"
-docker compose up -d cpa-manager-plus
+docker compose logs cpa-manager | grep -i "admin"
 ```
+
+> ⚠️ 如果日志中未显示密钥，需要使用 `reset-admin-key` 命令生成。
+
+#### 生成/重置管理员密钥
+
+```bash
+# 1. 停止服务
+docker compose down
+
+# 2. 生成新的管理员密钥（会显示一次，请立即保存）
+docker run --rm -v $(pwd)/manager-data:/data seakee/cpa-manager-plus:latest reset-admin-key
+
+# 3. 重新启动服务
+docker compose up -d
+```
+
+输出示例：
+```
+CPA Manager Plus admin key reset.
+New admin key: cmp_admin_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Save this value now. It will not be shown again.
+```
+
+#### 自定义管理员密钥
+
+```bash
+# 使用自定义密钥
+docker run --rm -v $(pwd)/manager-data:/data seakee/cpa-manager-plus:latest reset-admin-key --admin-key "your-custom-key"
+
+# 或从文件读取
+docker run --rm -v $(pwd)/manager-data:/data seakee/cpa-manager-plus:latest reset-admin-key --admin-key-file /path/to/key.txt
+```
+
+#### 初始化 CPA Manager Plus
+
+访问 `http://<服务器IP>:18317/management.html`，填写：
+
+| 字段 | 值 | 说明 |
+|-----|---|------|
+| 管理员密钥 | `cmp_admin_xxx...` | 上一步生成的管理员密钥 |
+| CPA 连接地址 | `http://cpa-cli-proxy:8317` | Docker 内部使用服务名互通 |
+| CPA 管理密钥 | `config.yaml` 中的 `secret-key` | 即 CPA 管理密钥 |
 
 Keep this key private.
 
