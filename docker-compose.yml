@@ -12,6 +12,10 @@ services:
       - "11451:11451"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      default:
+        aliases:
+          - cli-proxy-api
     volumes:
       - ./config.yaml:/CLIProxyAPI/config.yaml
       - ./auths:/root/.cli-proxy-api
