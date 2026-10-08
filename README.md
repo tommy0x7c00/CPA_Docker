@@ -109,7 +109,7 @@ grep 'secret-key' config.yaml
 首次启动时，管理员密钥会自动生成。查看方式：
 
 ```bash
-docker compose logs cpa-manager | grep -i "admin"
+docker compose logs cpa-manager-plus | grep -i "admin"
 ```
 
 > ⚠️ 如果日志中未显示密钥，需要使用 `reset-admin-key` 命令生成。
