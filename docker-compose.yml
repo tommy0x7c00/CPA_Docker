@@ -2,6 +2,7 @@ services:
   cpa-cli-proxy:
     image: eceasy/cli-proxy-api:latest
     container_name: cpa-cli-proxy
+    # command: ["./CLIProxyAPI", "--local-model"]
     restart: unless-stopped
     ports:
       - "8317:8317"
