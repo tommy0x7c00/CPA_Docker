@@ -12,6 +12,8 @@ services:
       - "11451:11451"
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      - CLIPROXY_PLUGIN_STORE_TOKEN=${CLIPROXY_PLUGIN_STORE_TOKEN:-}
     networks:
       default:
         aliases:
@@ -20,10 +22,12 @@ services:
       - ./config.yaml:/CLIProxyAPI/config.yaml
       - ./auths:/root/.cli-proxy-api
       - ./logs:/CLIProxyAPI/logs
+      - ./plugins:/CLIProxyAPI/plugins
+      - ./plugin-data:/CLIProxyAPI/data
 
-  cpa-manager:
+  cpa-manager-plus:
     image: seakee/cpa-manager-plus:latest
-    container_name: cpa-manager
+    container_name: cpa-manager-plus
     restart: unless-stopped
     ports:
       - "18317:18317"
